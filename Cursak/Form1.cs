@@ -252,6 +252,10 @@ namespace Cursak
                 bool exists = System.IO.Directory.Exists(PolyphasePath);
                 if (!exists) System.IO.Directory.CreateDirectory(PolyphasePath);
 
+                long ReadNumber = 0;
+                long WriteNumber = 0;
+
+                label12.Text = "00:00:00.010";
 
                 stopwatch.Restart();
                 timer1.Start();
@@ -259,13 +263,17 @@ namespace Cursak
                 await Task.Run(() =>
                 {
                     // Виклик алгоритму
-                    SortedFile3 =Program.PolyPhaseSort(SortingfileName);
+                    (SortedFile3,ReadNumber,WriteNumber) = Program.PolyPhaseSort(SortingfileName);
                 });
 
 
                 timer1.Stop();
                 stopwatch.Stop();
+
+
                 button5.Visible = true;
+
+                label13.Text = "Кількість читань: " + ReadNumber+"\n"+"Кількість записів: " + WriteNumber;
 
             }
         }
@@ -334,6 +342,11 @@ namespace Cursak
                 
                 Process.Start(absolutePath);
             }
+
+        }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
 
         }
     }
