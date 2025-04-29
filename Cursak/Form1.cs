@@ -240,13 +240,13 @@ namespace Cursak
                 return;
             }
 
-            if (!checkBox1.Checked && !checkBox2.Checked && !checkBox3.Checked)
+            if (!radioButton1.Checked && !radioButton3.Checked && !radioButton2.Checked)
             {
-                MessageBox.Show("Виберіть хоча б один алгоритм!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Виберіть алгоритм!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (checkBox3.Checked)
+            if (radioButton3.Checked)
             {
                 string PolyphasePath = "Kursak_results/PolyphaseSort";
                 bool exists = System.IO.Directory.Exists(PolyphasePath);
@@ -274,6 +274,66 @@ namespace Cursak
                 button5.Visible = true;
 
                 label13.Text = "Кількість читань: " + ReadNumber+"\n"+"Кількість записів: " + WriteNumber;
+
+            }
+            else if (radioButton2.Checked)
+            {
+                string ThreeWayMergeSortPath = "Kursak_results/ThreeWayMergeSort";
+                bool exists = System.IO.Directory.Exists(ThreeWayMergeSortPath);
+                if (!exists) System.IO.Directory.CreateDirectory(ThreeWayMergeSortPath);
+
+                long ReadNumber = 0;
+                long WriteNumber = 0;
+
+                label12.Text = "00:00:00.010";
+
+                stopwatch.Restart();
+                timer1.Start();
+
+                await Task.Run(() =>
+                {
+                    // Виклик алгоритму
+                    (SortedFile3, ReadNumber, WriteNumber) = Program.ThreeWayMergeFiles(SortingfileName);
+                });
+
+
+                timer1.Stop();
+                stopwatch.Stop();
+
+
+                button5.Visible = true;
+
+                label13.Text = "Кількість читань: " + ReadNumber + "\n" + "Кількість записів: " + WriteNumber;
+            }
+
+            else if (radioButton1.Checked)
+            {
+                string NaturalSortPath = "Kursak_results/NaturalSort";
+                bool exists = System.IO.Directory.Exists(NaturalSortPath);
+                if (!exists) System.IO.Directory.CreateDirectory(NaturalSortPath);
+
+                long ReadNumber = 0;
+                long WriteNumber = 0;
+
+                label12.Text = "00:00:00.010";
+
+                stopwatch.Restart();
+                timer1.Start();
+
+                await Task.Run(() =>
+                {
+                    // Виклик алгоритму
+                    (SortedFile3, ReadNumber, WriteNumber) = Program.NaturalSort(SortingfileName);
+                });
+
+
+                timer1.Stop();
+                stopwatch.Stop();
+
+
+                button5.Visible = true;
+
+                label13.Text = "Кількість читань: " + ReadNumber + "\n" + "Кількість записів: " + WriteNumber;
 
             }
         }
@@ -346,6 +406,16 @@ namespace Cursak
         }
 
         private void label13_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
 
         }

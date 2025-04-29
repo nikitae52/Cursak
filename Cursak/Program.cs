@@ -347,12 +347,9 @@ namespace Cursak
  
             ReadCount = 0;
             WriteCount = 0;
-            string tempfile01 = "tempfile01.txt"; // Writer 1
-            string tempfile02 = "tempfile02.txt"; // Writer 2
-            string tempfile03 = "tempfile03.txt"; // Writer 2
-
-            Console.WriteLine("Enter file name:");
-            fileName = Console.ReadLine();
+            string tempfile01 = "Kursak_results/NaturalSort/tempfile01.txt"; // Writer 1
+            string tempfile02 = "Kursak_results/NaturalSort/tempfile02.txt"; // Writer 2
+            string tempfile03 = "Kursak_results/NaturalSort/tempfile03.txt"; // Writer 2
 
             using (StreamReader reader = new StreamReader(fileName))
             using (StreamWriter writer2 = new StreamWriter(tempfile02))
@@ -397,7 +394,7 @@ namespace Cursak
 
 
             NaturallyMergeFiles(tempfile02, tempfile03, tempfile01);
-            return (NotEmptyFile, ReadCount, WriteCount);
+            return (tempfile01, ReadCount, WriteCount);
             //Console.WriteLine("Подмассивы распределены без накопления в памяти.");
         }
 
@@ -583,14 +580,12 @@ namespace Cursak
                     while (has2)//пока не закончаться числа во 2 файле 
                     {
                         WriteCounted(writer, number2 + " ");
-                        has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                         if (isEmptyMarker2)//на случай если последнее будет меньше
                         {
-                            WriteCounted(writer, number2 + " ");
+                            
                             writer.WriteLine();
-                            has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
-
                         }
+                        has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                     }
 
                 }
@@ -608,14 +603,11 @@ namespace Cursak
                     while (has1)//пока не закончаться числа во 2 файле 
                     {
                         WriteCounted(writer, number1 + " ");
-                        has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                         if (isEmptyMarker1)//на случай если последнее будет меньше
                         {
-                            WriteCounted(writer, number1 + " ");
                             writer.WriteLine();
-                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
-
                         }
+                        has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                     }
 
                 }
@@ -672,6 +664,217 @@ namespace Cursak
             NaturallyMergeFiles(inputfile1, inputfile2, outputfile);
         }
 
+        public static (string, long, long) ThreeWayMergeFiles(string fileName)
+        {
+            ReadCount = 0;
+            WriteCount = 0;
+            string tempfileB1 = "Kursak_results/ThreeWayMergeSort/B01.txt"; // Writer 1
+            string tempfileB2 = "Kursak_results/ThreeWayMergeSort/B02.txt"; // Writer 2
+            string tempfileB3 = "Kursak_results/ThreeWayMergeSort/B03.txt"; // Writer 2
+
+            using (StreamReader reader = new StreamReader(fileName))
+            using (StreamWriter writer1 = new StreamWriter(tempfileB1))
+            using (StreamWriter writer2 = new StreamWriter(tempfileB2))
+            using (StreamWriter writer3 = new StreamWriter(tempfileB3))
+            {
+                string line = ReadLineCounted(reader);
+                int.TryParse(line, out int prevNumb);
+
+                StreamWriter activeWriter = writer1;
+                //bool writeToSecond = true; // true = writer2, false = writer3
+
+                WriteCounted(activeWriter, prevNumb.ToString());
+
+                while ((line = ReadLineCounted(reader)) != null)
+                {
+                    if (!int.TryParse(line, out int number)) continue;
+
+                    if (number >= prevNumb)
+                    {
+                        // продолжаем писать в текущий поток
+                        WriteCounted(activeWriter, " " + number.ToString());
+                    }
+                    else
+                    {
+                        // Подмассив закончился, переходим на другой поток
+                        WriteLineCounted(activeWriter); // Завершаем строку
+
+                        // Меняем поток записи
+                        if (activeWriter == writer1)
+                        {
+                            activeWriter = writer2;
+                        }
+                        else if (activeWriter == writer2)
+                        {
+                            activeWriter = writer3;
+                        }
+                        else
+                        {
+                            activeWriter = writer1;
+                        }
+
+                        // Начинаем новый подмассив
+                        WriteCounted(activeWriter, number.ToString());
+                    }
+
+                    prevNumb = number;
+                }
+
+                // Завершаем последний подмассив
+                WriteLineCounted(activeWriter);
+            }
+
+
+            string resultfile = MergeFilesINThreeWay(tempfileB1, tempfileB2, tempfileB3);
+            return (resultfile, ReadCount, WriteCount);
+            //Console.WriteLine($"Подмассивы распределены без накопления в памяти, result is in,{resultfile}");
+        }
+
+        static string MergeFilesINThreeWay(string inputfile1, string inputfile2, string inputfile3)
+        {
+            bool has1, has2, has3; // 3 файла
+            bool line1finished = false;
+            bool line2finished = false;
+            bool line3finished = false;
+            string outputfile1;
+            string outputfile2;
+            string outputfile3;
+            string tempfileB1 = "Kursak_results/ThreeWayMergeSort/B01.txt";
+            string tempfileB2 = "Kursak_results/ThreeWayMergeSort/B02.txt";
+            string tempfileB3 = "Kursak_results/ThreeWayMergeSort/B03.txt";
+            string tempfileC1 = "Kursak_results/ThreeWayMergeSort/C01.txt"; // Writer 2
+            string tempfileC2 = "Kursak_results/ThreeWayMergeSort/C02.txt"; // Writer 2
+            string tempfileC3 = "Kursak_results/ThreeWayMergeSort/C03.txt"; // Writer 2
+
+            if (inputfile1 == tempfileB1)
+            {
+                outputfile1 = tempfileC1;
+                outputfile2 = tempfileC2;
+                outputfile3 = tempfileC3;
+            }
+            else
+            {
+                outputfile1 = tempfileB1;
+                outputfile2 = tempfileB2;
+                outputfile3 = tempfileB3;
+            }
+
+            using (StreamReader reader1 = new StreamReader(inputfile1))
+            using (StreamReader reader2 = new StreamReader(inputfile2))
+            using (StreamReader reader3 = new StreamReader(inputfile3))
+            using (StreamWriter writer1 = new StreamWriter(outputfile1))
+            using (StreamWriter writer2 = new StreamWriter(outputfile2))
+            using (StreamWriter writer3 = new StreamWriter(outputfile3))
+            {
+                has1 = TryReadNextNumber(reader1, out int number1, out bool isEmptyMarker1);
+                if (!has1) line1finished = true;
+                has2 = TryReadNextNumber(reader2, out int number2, out bool isEmptyMarker2);
+                if (!has2) line2finished = true;
+                has3 = TryReadNextNumber(reader3, out int number3, out bool isEmptyMarker3);
+                if (!has3) line3finished = true;
+                StreamWriter ActiveWriter = writer1;
+
+                while (has1 || has2 || has3)
+                {
+                    int minValue = int.MinValue;
+                    int fromWhich = 0;
+
+                    if (line1finished && line2finished && line3finished)
+                    {
+                        line1finished = false;
+                        line2finished = false;
+                        line3finished = false;
+                        WriteLineCounted(ActiveWriter);
+                        has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
+                        if (!has1) line1finished = true;
+                        has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
+                        if (!has2) line2finished = true;
+                        has3 = TryReadNextNumber(reader3, out number3, out isEmptyMarker3);
+                        if (!has3) line3finished = true;
+
+                        if (line1finished && line2finished && line3finished) continue;
+                        if (ActiveWriter == writer1)
+                        {
+                            ActiveWriter = writer2;
+                        }
+                        else if (ActiveWriter == writer2)
+                        {
+                            ActiveWriter = writer3;
+                        }
+                        else
+                        {
+                            ActiveWriter = writer1;
+                        }
+                    }
+
+                    if (has1 && (!has2 || number1 <= number2) && (!has3 || number1 <= number3) && !line1finished)
+                    {
+                        minValue = number1;
+                        fromWhich = 1;
+                        if (isEmptyMarker1 == true)
+                        {
+                            line1finished = true;
+                            number1 = int.MaxValue;
+                        }
+
+                    }
+                    else if (has2 && (!has1 || number2 <= number1) && (!has3 || number2 <= number3) && !line2finished)
+                    {
+                        minValue = number2;
+                        fromWhich = 2;
+                        if (isEmptyMarker2 == true)
+                        {
+                            line2finished = true;
+                            number2 = int.MaxValue;
+                        }
+                    }
+                    else if (!line3finished)// has3
+                    {
+                        minValue = number3;
+                        fromWhich = 3;
+                        if (isEmptyMarker3 == true)
+                        {
+                            line3finished = true;
+                            number3 = int.MaxValue;
+                        }
+                    }
+
+                    // Пишем минимальное число
+                    WriteCounted(ActiveWriter, minValue + " ");
+
+
+                    // Обновляем число из того файла, откуда взяли
+                    if (fromWhich == 1 && !line1finished)
+                        has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
+                    else if (fromWhich == 2 && !line2finished)
+                        has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
+                    else if (fromWhich == 3 && !line3finished)
+                        has3 = TryReadNextNumber(reader3, out number3, out isEmptyMarker3);
+                }
+
+            }
+            using (StreamReader writer1 = new StreamReader(outputfile1))
+            using (StreamReader writer2 = new StreamReader(outputfile2))
+            using (StreamReader writer3 = new StreamReader(outputfile3))
+            {
+                has1 = TryReadNextNumber(writer1, out int number1, out bool isEmptyMarker1);
+                has2 = TryReadNextNumber(writer2, out int number2, out bool isEmptyMarker2);
+                has3 = TryReadNextNumber(writer3, out int number3, out bool isEmptyMarker3);
+                if ((has1 && !has2 && !has3))
+                {
+                    return outputfile1;
+                }
+                else if (!has1 && has2 && !has3)
+                {
+                    return outputfile2;
+                }
+                else if (!has1 && !has2 && has3)
+                {
+                    return outputfile3;
+                }
+            }
+            return MergeFilesINThreeWay(outputfile1, outputfile2, outputfile3);
+        }
         static void WriteCounted(StreamWriter writer, string text)
         {
             writer.Write(text);
