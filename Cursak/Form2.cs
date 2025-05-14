@@ -23,5 +23,10 @@ namespace Cursak
             Application.DoEvents(); // Додає оновлення UI
             this.StartPosition = FormStartPosition.CenterScreen;
         }
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
