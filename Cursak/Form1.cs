@@ -18,9 +18,11 @@ namespace Cursak
         private Stopwatch stopwatch = new Stopwatch();
 
         string fileName;
-        string SortingfileName;
+        //string SortingfileName;
         //string SortedFile3;
-        private myFile genfile;
+        private File Sortingfile;
+        private File Genfile;
+        //private File EnteredFile;
         public Form1()
         {
 
@@ -111,9 +113,22 @@ namespace Cursak
                 MessageBox.Show("Мінімальне число не може бути більше максимального!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            genfile = new myFile(fileName);
-            genfile = myFile.GenerateFile(fileName, count, minR, maxR);
+            Genfile = new File(fileName);
+            Genfile = File.GenerateFile(fileName, count, minR, maxR);
+            Sortingfile=null;
+            
+            radioButton1.Checked = false;
+            radioButton2.Checked = false;
+            radioButton3.Checked = false;
+            label12.Text = "";
 
+            textBox5.Text = "";
+            button2.Visible = true;
+            button5.Visible = false;
+            checkBox4.Checked = false;
+
+            label13.Text = "";
+            
             //fileName = fileName + ".txt";
             /*
             Form2 loadingForm = new Form2();
@@ -136,10 +151,7 @@ namespace Cursak
             */
 
 
-            button2.Visible = true;
-            button5.Visible = false;
 
-            label13.Text = "";
 
             MessageBox.Show($"Файл успішно створений!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -175,7 +187,7 @@ namespace Cursak
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Process.Start("explorer.exe", genfile.FilePath);
+            Process.Start("explorer.exe", Genfile.FilePath);
         }
 
         private void label6_Click(object sender, EventArgs e)
@@ -221,12 +233,14 @@ namespace Cursak
                     label8.Visible = false;
                     textBox5.Visible = false;
                     button4.Visible = false;
+                    Sortingfile = Genfile;
+
 
                 }
             }
             else
             {
-                //SortingfileName = null;
+                Sortingfile = null;
                 label8.Visible = true;
                 textBox5.Visible = true;
                 button4.Visible = true;
@@ -237,7 +251,7 @@ namespace Cursak
 
         private async void button3_Click(object sender, EventArgs e)
         {
-            if (genfile.FilePath == null)
+            if (Sortingfile==null)
             {
                 MessageBox.Show("Виберіть файл для сортування!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -259,14 +273,16 @@ namespace Cursak
 
                 stopwatch.Restart();
                 timer1.Start();
-
+                button3.Enabled = false;
+                button5.Visible = false;
+                label13.Text = "";
                 await Task.Run(() =>
                 {
                     // Виклик алгоритму
-                    genfile.PolyPhaseSort();
+                    Sortingfile.PolyPhaseSort();
                     //(SortedFile3, ReadNumber, WriteNumber) = FileSorter.PolyPhaseSort(SortingfileName);
                 });
-
+                button3.Enabled = true;
 
                 timer1.Stop();
                 stopwatch.Stop();
@@ -274,7 +290,7 @@ namespace Cursak
 
                 button5.Visible = true;
 
-                label13.Text = "Кількість читань: " + genfile.ReadCount + "\n" + "Кількість записів: " + genfile.WriteCount;
+                label13.Text = "Кількість читань: " + Sortingfile.ReadCount + "\n" + "Кількість записів: " + Sortingfile.WriteCount;
 
             }
             else if (radioButton2.Checked)
@@ -288,22 +304,24 @@ namespace Cursak
 
                 stopwatch.Restart();
                 timer1.Start();
-
+                button3.Enabled = false;
+                button5.Visible = false;
+                label13.Text = "";
                 await Task.Run(() =>
                 {
                     // Виклик алгоритму
-                    genfile.ThreeWayMergeSort();
+                    Sortingfile.ThreeWayMergeSort();
                     
                 });
 
-
+                button3.Enabled = true;
                 timer1.Stop();
                 stopwatch.Stop();
 
 
                 button5.Visible = true;
 
-                label13.Text = "Кількість читань: " + genfile.ReadCount + "\n" + "Кількість записів: " + genfile.WriteCount;
+                label13.Text = "Кількість читань: " + Sortingfile.ReadCount + "\n" + "Кількість записів: " + Sortingfile.WriteCount;
             }
 
             else if (radioButton1.Checked)
@@ -317,21 +335,23 @@ namespace Cursak
 
                 stopwatch.Restart();
                 timer1.Start();
-
+                button3.Enabled = false;
+                button5.Visible = false;
+                label13.Text = "";
                 await Task.Run(() =>
                 {
                     // Виклик алгоритму
-                    genfile.NaturalSort();
+                    Sortingfile.NaturalSort();
                 });
 
-
+                button3.Enabled = true;
                 timer1.Stop();
                 stopwatch.Stop();
 
 
                 button5.Visible = true;
 
-                label13.Text = "Кількість читань: " + genfile.ReadCount + "\n" + "Кількість записів: " + genfile.WriteCount;
+                label13.Text = "Кількість читань: " + Sortingfile.ReadCount + "\n" + "Кількість записів: " + Sortingfile.WriteCount;
 
             }
         }
@@ -357,7 +377,7 @@ namespace Cursak
                 MessageBox.Show("Введіть шлях до файлу!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            else if (!File.Exists(EnteredFileName))
+            else if (!System.IO.File.Exists(EnteredFileName))
             {
                 MessageBox.Show("Файл не знайдено!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -367,13 +387,20 @@ namespace Cursak
                 MessageBox.Show("Файл має бути у форматі .txt!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            using (var reader = new StreamReader(EnteredFileName))
-            {
 
-                SortingfileName = EnteredFileName;
+
+                Sortingfile = new File(EnteredFileName);
+                radioButton1.Checked = false;
+                radioButton2.Checked = false;
+                radioButton3.Checked = false;
+                label12.Text = "";
+
+                button5.Visible = false;
+
+                label13.Text = "";
                 MessageBox.Show("Файл успішно знайдено!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            }
+            
         }
 
         private void label11_Click(object sender, EventArgs e)
@@ -393,9 +420,9 @@ namespace Cursak
 
         private void button5_Click(object sender, EventArgs e)
         {
-            string absolutePath = Path.GetFullPath(genfile.NotEmptyFile);
+            string absolutePath = Path.GetFullPath(Sortingfile.NotEmptyFile);
 
-            if (File.Exists(absolutePath))
+            if (System.IO.File.Exists(absolutePath))
             {
 
                 Process.Start(absolutePath);
@@ -418,8 +445,15 @@ namespace Cursak
 
         }
 
+        private void radioButton2_CheckedChanged_1(object sender, EventArgs e)
+        {
 
+        }
 
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
 

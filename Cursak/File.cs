@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cursak
 {
-    public class myFile
+    public class File
     {
         public long ReadCount=0;
         public long WriteCount=0;
@@ -15,11 +15,11 @@ namespace Cursak
 
         public string FilePath { get; set; }
 
-        public myFile(string fileName)
+        public File(string fileName)
         {
             FilePath = fileName;
         }
-        public static myFile GenerateFile(string fileName, int count, int minR, int maxR)
+        public static File GenerateFile(string fileName, int count, int minR, int maxR)
         {
             Form2 loadingForm = new Form2();
             loadingForm.Show();
@@ -37,7 +37,7 @@ namespace Cursak
             }
 
             loadingForm.Close();
-            return new myFile(path);
+            return new File(path);
         }
         public void PolyPhaseSort()
         {
@@ -671,8 +671,8 @@ namespace Cursak
                     }
 
                 }
-                File.Create(inputfile1).Dispose();
-                File.Create(inputfile2).Dispose();
+                System.IO.File.Create(inputfile1).Dispose();
+                System.IO.File.Create(inputfile2).Dispose();
                 //NaturallyMergeFiles(inputfile2, outputfile, inputfile1);
             }
             else if (!has2)// если первым закончился файл 2
@@ -693,8 +693,8 @@ namespace Cursak
                     }
 
                 }
-                File.Create(inputfile1).Dispose();
-                File.Create(inputfile2).Dispose();
+                System.IO.File.Create(inputfile1).Dispose();
+                System.IO.File.Create(inputfile2).Dispose();
                 //NaturallyMergeFiles(inputfile1, outputfile, inputfile2);
             }
 
@@ -1033,8 +1033,8 @@ namespace Cursak
         void RemoveFirstNLines(string filePath, int N)
         {
             string tempFilePath = "TEMPFILE.txt";
-            using (var input = File.OpenRead(filePath))
-            using (var output = File.Create(tempFilePath))
+            using (var input = System.IO.File.OpenRead(filePath))
+            using (var output = System.IO.File.Create(tempFilePath))
             {
                 int b;
                 int newlineCount = 0;
@@ -1061,8 +1061,8 @@ namespace Cursak
             }
 
             // Заменяем оригинальный файл
-            File.Delete(filePath);
-            File.Move(tempFilePath, filePath);
+            System.IO.File.Delete(filePath);
+            System.IO.File.Move(tempFilePath, filePath);
         }
     }
 }
