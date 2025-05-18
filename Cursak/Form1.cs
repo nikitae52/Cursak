@@ -19,7 +19,7 @@ namespace Cursak
 
         string fileName;
         //string SortingfileName;
-        //string SortedFile3;
+        //string SortedFile3
         private File Sortingfile;
         private File Genfile;
         //private File EnteredFile;
