@@ -67,7 +67,7 @@ namespace Cursak
                 return;
             }
             //перевірка чи введене правильне число
-            else if (!int.TryParse(textBox2.Text, out count) || count <= 0 || count > 5000000)
+            else if (!int.TryParse(textBox2.Text, out count) || count <= 0 || count > 15000000)
             {
                 MessageBox.Show("Введіть коректну кількість чисел!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -114,20 +114,25 @@ namespace Cursak
                 return;
             }
             Genfile = new File(fileName);
+
+            button1.Enabled = false;
+            button2.Visible = false;
             Genfile = File.GenerateFile(fileName, count, minR, maxR);
-            Sortingfile=null;
-            
+            button1.Enabled = true;
+            Sortingfile =null;
+            /*
             radioButton1.Checked = false;
             radioButton2.Checked = false;
             radioButton3.Checked = false;
             label12.Text = "";
-
             textBox5.Text = "";
+            */
+
             button2.Visible = true;
             button5.Visible = false;
             checkBox4.Checked = false;
 
-            label13.Text = "";
+            //label13.Text = "";
             
             //fileName = fileName + ".txt";
             /*
@@ -221,7 +226,7 @@ namespace Cursak
         {
             if (checkBox4.Checked)
             {
-                if (string.IsNullOrWhiteSpace(fileName))
+                if (Genfile==null)
                 {
                     MessageBox.Show("У цій сесії не було створено файлів", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     checkBox4.Checked = false;
