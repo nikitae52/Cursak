@@ -21,7 +21,7 @@ namespace Cursak
         }
         public static File GenerateFile(string fileName, int count, int minR, int maxR)
         {
-            Form2 loadingForm = new Form2();
+            LoadingForm loadingForm = new LoadingForm();
             loadingForm.Show();
 
             string path = fileName + ".txt";
@@ -74,14 +74,14 @@ namespace Cursak
                     }
                     else
                     {
-                        WriteLineCounted(activeWriter); // закончился подмассив
+                        WriteLineCounted(activeWriter); // закінчився підмассив
 
 
-                        // учёт подмассивов
+                        // підрахунок підмассивів
                         if (writingToFirst) totalWritten1++;
                         else totalWritten2++;
 
-                        // проверка: достигли ли лимита
+                        // перевірка на досягнення ліміту
                         if (totalWritten1 >= activeFib1 && totalWritten2 >= activeFib2)
                         {
                             int next = fib1 + fib2;
@@ -92,7 +92,7 @@ namespace Cursak
 
                         }
 
-                        // переключаемся на нужный поток
+                        // переключаємось на потрібний потік
                         if (totalWritten1 < activeFib1)
                         {
                             activeWriter = writer1;
@@ -104,7 +104,7 @@ namespace Cursak
                             writingToFirst = false;
                         }
 
-                        // начинаем новый подмассив
+                        // починаємо записувати новий підмассив
                         WriteCounted(activeWriter, number.ToString());
 
                     }
@@ -112,11 +112,11 @@ namespace Cursak
                     prevNumb = number;
                 }
 
-                WriteLineCounted(activeWriter); // завершить последний подмассив
+                WriteLineCounted(activeWriter); // закінчити написання останнього підмасиву
                 if (writingToFirst) totalWritten1++;
                 else totalWritten2++;
 
-                // Дописываем недостающие EMPTY
+                // дописуємо недостатні EMPTY
                 while (totalWritten1 < activeFib1)
                 {
                     WriteLineCounted(writer1, "E");
@@ -129,7 +129,7 @@ namespace Cursak
                     totalWritten2++;
                 }
 
-                WriteLineCounted(activeWriter); // Завершить последний подмассив
+                WriteLineCounted(activeWriter); // Завершити останній підмассив
             }
 
 
@@ -165,26 +165,26 @@ namespace Cursak
 
                     if (number >= prevNumb)
                     {
-                        // продолжаем писать в текущий поток
+                        // продовжуємо писати в поточний потік
                         WriteCounted(activeWriter, " " + number.ToString());
                     }
                     else
                     {
-                        // Подмассив закончился, переходим на другой поток
-                        WriteLineCounted(activeWriter); // Завершаем строку
+                        // підмассив закінчився, переходимо на інший потік
+                        WriteLineCounted(activeWriter); // завершуємо рядок
 
-                        // Меняем поток записи
+                        // змінюємо потік запису
                         writeToSecond = !writeToSecond;
                         activeWriter = writeToSecond ? writer2 : writer3;
 
-                        // Начинаем новый подмассив
+                        // починаємо новий підмассив
                         WriteCounted(activeWriter, number.ToString());
                     }
 
                     prevNumb = number;
                 }
 
-                // Завершаем последний подмассив
+                // завершуємо останній підмассив
                 WriteLineCounted(activeWriter);
             }
 
@@ -224,15 +224,15 @@ namespace Cursak
 
                     if (number >= prevNumb)
                     {
-                        // продолжаем писать в текущий поток
+                        // продовжуємо писати в поточний потік
                         WriteCounted(activeWriter, " " + number.ToString());
                     }
                     else
                     {
-                        // Подмассив закончился, переходим на другой поток
-                        WriteLineCounted(activeWriter); // Завершаем строку
+                        // підмассив закінчився, переходимо на інший потік
+                        WriteLineCounted(activeWriter); // завершуємо рядок
 
-                        // Меняем поток записи
+                        // змінюємо потік запису
                         if (activeWriter == writer1)
                         {
                             activeWriter = writer2;
@@ -246,14 +246,14 @@ namespace Cursak
                             activeWriter = writer1;
                         }
 
-                        // Начинаем новый подмассив
+                        // починаємо новий підмассив
                         WriteCounted(activeWriter, number.ToString());
                     }
 
                     prevNumb = number;
                 }
 
-                // Завершаем последний подмассив
+                // завершуємо останній підмассив
                 WriteLineCounted(activeWriter);
             }
 
@@ -264,7 +264,7 @@ namespace Cursak
         }
         void MergeFiles(string inputfile1, string inputfile2, string outputfile)
         {
-            bool has1, has2;//обьявляем тут чтобы потом анализировать для рекурсии
+            bool has1, has2;//оголошуємо тут щоб потім аналізувати для рекурсії
             using (StreamReader reader1 = new StreamReader(inputfile1))
             using (StreamReader reader2 = new StreamReader(inputfile2))
             using (StreamWriter writer = new StreamWriter(outputfile))
@@ -311,69 +311,69 @@ namespace Cursak
                         if (number1 <= number2)
                         {
 
-                            if (isEmptyMarker1 && isEmptyMarker2) //если два числа последние в строке
+                            if (isEmptyMarker1 && isEmptyMarker2) //якщо два числа останні в строке
                             {
-                                WriteCounted(writer, number1 + " ");//вводим меньшеее число з 1 файла
-                                WriteCounted(writer, number2 + " ");//вводим большее число з 2 файла
-                                WriteLineCounted(writer);//переходим на новую строку
-                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                                WriteCounted(writer, number1 + " ");//вводимо меньше число з 1 файла
+                                WriteCounted(writer, number2 + " ");//вводимо більше число з 2 файла
+                                WriteLineCounted(writer);//переходимо на новий рядок
+                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступні числа
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
 
                             }
 
-                            else if (isEmptyMarker1)// если число из 1 файла последнее в строке
+                            else if (isEmptyMarker1)// якщо число з 1 файла останнє в рядку
                             {
-                                WriteCounted(writer, number1 + " ");// записываем его
-                                while (!isEmptyMarker2)// пишем числа из файла 2 пока строчка не закончиться
+                                WriteCounted(writer, number1 + " ");// ззаписуємо його
+                                while (!isEmptyMarker2)// пишемо числа з файла 2 поки рядок не закінчиться
                                 {
                                     WriteCounted(writer, number2 + " ");
                                     has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                                 }
-                                WriteCounted(writer, number2 + " ");// пишем последнее число з 2 файла
+                                WriteCounted(writer, number2 + " ");// пишемо останнє число з 2 файла
                                 WriteLineCounted(writer);
-                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступні числа
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                             }
-                            else if (isEmptyMarker2)//если число из 2 файла последнее в строке
+                            else if (isEmptyMarker2)//якщо число з 2 файла останнє в рядку
                             {
 
-                                while (!isEmptyMarker1) //пока не закончится строка в 1 файле
+                                while (!isEmptyMarker1) //поки не закінчиться рядок в 1 файлі
                                 {
-                                    if (number1 <= number2) // если  число из 1 файла меньше, выводим числа из 1 файла
+                                    if (number1 <= number2) // якщо число з 1 файла менше, виводимо числа з 1 файла
                                     {
                                         WriteCounted(writer, number1 + " ");
                                         has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
 
-                                        if (isEmptyMarker1 && number1 <= number2)//если последнее число из 1 файла так и осталось меньше
+                                        if (isEmptyMarker1 && number1 <= number2)//якщо останнє число з 1 файла так і залишилось менше
                                         {
                                             WriteCounted(writer, number1 + " ");
                                             WriteCounted(writer, number2 + " ");
                                             //writer.WriteLine();
                                         }
-                                        else if (isEmptyMarker1 && number1 > number2)//если последнее число из 1 файла стало больше
+                                        else if (isEmptyMarker1 && number1 > number2)//якщо останнє число з 1 файлу стало більше
                                         {
                                             WriteCounted(writer, number2 + " ");
                                             WriteCounted(writer, number1 + " ");
                                             //writer.WriteLine();
                                         }
                                     }
-                                    else //пока они не станут больше
+                                    else //поки вони не стануть більше
                                     {
-                                        WriteCounted(writer, number2 + " ");// пишем последнее число з 2 файла
-                                        while (!isEmptyMarker1)// и до конца строки пишем числа из файла 1
+                                        WriteCounted(writer, number2 + " ");// пишемо останнє число з 2 файла
+                                        while (!isEmptyMarker1)// і до кінця рядка пишемо число з файлу 1
                                         {
                                             WriteCounted(writer, number1 + " ");
                                             has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                                         }
-                                        WriteCounted(writer, number1 + " ");// записываем последнее число з 1 файла которое цикл не покрывает
+                                        WriteCounted(writer, number1 + " ");// записуємо останнє число з 1 файла яке цикл не покриває
 
                                     }
                                 }
-                                WriteLineCounted(writer);//переходим на новую строку
-                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                                WriteLineCounted(writer);//переходимо на новий рядок
+                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступні числа
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                             }
-                            else//если числа не последние, просто записываем меньшее и запрашиваем новое
+                            else//якщо числа не останні, просто записуємо менше і запитуємо нове
                             {
                                 WriteCounted(writer, number1 + " ");
                                 has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
@@ -382,44 +382,44 @@ namespace Cursak
 
 
                         }
-                        else// если число з 2 файла меньше
+                        else// якщо число з 2 файла менше
                         {
 
-                            if (isEmptyMarker1 && isEmptyMarker2) //если два числа последние в строке
+                            if (isEmptyMarker1 && isEmptyMarker2) //якщо два числа останні в ряжку
                             {
-                                WriteCounted(writer, number2 + " ");//вводим меньшее число
-                                WriteCounted(writer, number1 + " ");// вводим большее число
-                                WriteLineCounted(writer);//переходим на новую строку
-                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                                WriteCounted(writer, number2 + " ");//вводимо менше число
+                                WriteCounted(writer, number1 + " ");// вводимо більше число
+                                WriteLineCounted(writer);//переходимо на новий рядок
+                                has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступні числа
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                             }
 
-                            else if (isEmptyMarker1)// если число из 1 файла последнее в строке
+                            else if (isEmptyMarker1)// якщо число з 1 файла останнє в рядку
                             {
                                 //writer.Write(number2 + " ");
-                                while (!isEmptyMarker2)//пока не закончаться числа во 2 файле 
+                                while (!isEmptyMarker2)//поки не закінчаться числа в 2 файлі
                                 {
-                                    if (number1 > number2) // если  число из 2 файла меньше, выводим числа из 2 файла
+                                    if (number1 > number2) // якщо число з 2 файлу менше, виводимо числа з 2 файлу
                                     {
                                         WriteCounted(writer, number2 + " ");
                                         has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
-                                        if (isEmptyMarker2 && number1 > number2)//на случай если последнее будет меньше
+                                        if (isEmptyMarker2 && number1 > number2)//на випадок якщо останнє буде менше
                                         {
                                             WriteCounted(writer, number2 + " ");
                                             WriteCounted(writer, number1 + " ");
                                             //writer.WriteLine();
                                         }
-                                        else if (isEmptyMarker2 && number1 <= number2)//если последнее будет больше
+                                        else if (isEmptyMarker2 && number1 <= number2)//если останнє буде більше
                                         {
                                             WriteCounted(writer, number1 + " ");
                                             WriteCounted(writer, number2 + " ");
                                             //writer.WriteLine();
                                         }
                                     }
-                                    else //пока они не станут больше
+                                    else //поки вони не стануть більше
                                     {
-                                        WriteCounted(writer, number1 + " ");// пишем последнее число з 1 файла
-                                        while (!isEmptyMarker2)// и до конца строки пишем числа из файла 2
+                                        WriteCounted(writer, number1 + " ");// пишемо останнє число з 1 файла
+                                        while (!isEmptyMarker2)// і до кінця рядка пишемо числа з файлу 2
                                         {
                                             WriteCounted(writer, number2 + " ");
                                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
@@ -431,21 +431,21 @@ namespace Cursak
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                                 WriteLineCounted(writer);
                             }
-                            else if (isEmptyMarker2)//если число из 2 файла последнее в строке
+                            else if (isEmptyMarker2)//якщо число з 2 файла останнє в рядку
                             {
-                                WriteCounted(writer, number2 + " ");//пишем его так как оно меньше
-                                while (!isEmptyMarker1)//пишем до конца строки чисел из файла 1
+                                WriteCounted(writer, number2 + " ");//пишемо його так як воно менше
+                                while (!isEmptyMarker1)//пишемо до кінця рядка числа з файлу 1
                                 {
                                     WriteCounted(writer, number1 + " ");
                                     has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                                 }
-                                WriteCounted(writer, number1 + " ");//записуем последнее число з 1 файла
+                                WriteCounted(writer, number1 + " ");//записуємо останнє число з 1 файла
                                 WriteLineCounted(writer);
                                 has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                             }
 
-                            else//если числа не последние, просто записываем меньшее и запрашиваем новое
+                            else//якщо числа не останні, просто записуємо менше і запитуємо нове
                             {
                                 WriteCounted(writer, number2 + " ");
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
@@ -457,22 +457,22 @@ namespace Cursak
 
 
             }
-            //если один из файлов закончился, то сливаем оставшиеся числа из другого файла
-            int count1 = CountLines(outputfile);//считаем количество строк в файле 3
-            RemoveFirstNLines(inputfile1, count1);//удаляем обьедененное колличество слов
+            //якщо один з файлів закінчився, то зливаємо залишкові числа з іншого файлу
+            int count1 = CountLines(outputfile);//зчитаємо кількість рядків в файлі 3
+            RemoveFirstNLines(inputfile1, count1);//видаляємо об'єднану кількість рядків
             RemoveFirstNLines(inputfile2, count1);
             //Console.WriteLine(count1);
 
             if (!has1 && !has2)
             {
                 NotEmptyFile = outputfile;
-                return;//заканчиваем рекурсию
+                return;//завершуємо рекурсію
             }
-            else if (!has1)// если первым закончился файл 1
+            else if (!has1)// якщо перший закінчився файл 1
             {
                 MergeFiles(inputfile2, outputfile, inputfile1);
             }
-            else if (!has2)// если первым закончился файл 2
+            else if (!has2)// якщо першим закінчився файл 2
             {
                 MergeFiles(inputfile1, outputfile, inputfile2);
             }
@@ -482,7 +482,7 @@ namespace Cursak
 
         void NaturallyMergeFiles(string inputfile1, string inputfile2, string outputfile)
         {
-            bool has1, has2;//обьявляем тут чтобы потом анализировать для рекурсии
+            bool has1, has2;//оголошуємо тут щоб потім аналізувати для рекурсії
             using (StreamReader reader1 = new StreamReader(inputfile1))
             using (StreamReader reader2 = new StreamReader(inputfile2))
             using (StreamWriter writer = new StreamWriter(outputfile))
@@ -496,69 +496,69 @@ namespace Cursak
                     if (number1 <= number2)
                     {
 
-                        if (isEmptyMarker1 && isEmptyMarker2) //если два числа последние в строке
+                        if (isEmptyMarker1 && isEmptyMarker2) //якщо два числа останні в рядку
                         {
-                            WriteCounted(writer, number1 + " ");//вводим меньшеее число з 1 файла
-                            WriteCounted(writer, number2 + " ");//вводим большее число з 2 файла
-                            WriteLineCounted(writer);//переходим на новую строку
-                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                            WriteCounted(writer, number1 + " ");//вводимо менше число з 1 файла
+                            WriteCounted(writer, number2 + " ");//вводимо більше число з 2 файла
+                            WriteLineCounted(writer);//переходимо на новий рядок
+                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступне число
                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
 
                         }
 
-                        else if (isEmptyMarker1)// если число из 1 файла последнее в строке
+                        else if (isEmptyMarker1)// якщо число з 1 файла останнє в рядку
                         {
-                            WriteCounted(writer, number1 + " ");// записываем его
-                            while (!isEmptyMarker2)// пишем числа из файла 2 пока строчка не закончиться
+                            WriteCounted(writer, number1 + " ");// записуємо його
+                            while (!isEmptyMarker2)// пишемо числа з файла 2 поки рядок не закінчиться
                             {
                                 WriteCounted(writer, number2 + " ");
                                 has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                             }
-                            WriteCounted(writer, number2 + " ");// пишем последнее число з 2 файла
+                            WriteCounted(writer, number2 + " ");// пишемо останнє число з 2 файла
                             WriteLineCounted(writer);
-                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступні числа
                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                         }
-                        else if (isEmptyMarker2)//если число из 2 файла последнее в строке
+                        else if (isEmptyMarker2)//шукаємо число з 2 файла останнє в рядку
                         {
 
-                            while (!isEmptyMarker1) //пока не закончится строка в 1 файле
+                            while (!isEmptyMarker1) //поки не закінчиться рядок в 1 файлі
                             {
-                                if (number1 <= number2) // если  число из 1 файла меньше, выводим числа из 1 файла
+                                if (number1 <= number2) // якщо число з 1 файла менше, виводимо числа з 1 файла
                                 {
                                     WriteCounted(writer, number1 + " ");
                                     has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
 
-                                    if (isEmptyMarker1 && number1 <= number2)//если последнее число из 1 файла так и осталось меньше
+                                    if (isEmptyMarker1 && number1 <= number2)//якщо останнє число  з 1 файла так і залишилось менше
                                     {
                                         WriteCounted(writer, number1 + " ");
                                         WriteCounted(writer, number2 + " ");
                                         //writer.WriteLine();
                                     }
-                                    else if (isEmptyMarker1 && number1 > number2)//если последнее число из 1 файла стало больше
+                                    else if (isEmptyMarker1 && number1 > number2)//якщо останнє число з 1 файла стало більше
                                     {
                                         WriteCounted(writer, number2 + " ");
                                         WriteCounted(writer, number1 + " ");
                                         //writer.WriteLine();
                                     }
                                 }
-                                else //пока они не станут больше
+                                else //поки вони не стануть більше
                                 {
-                                    WriteCounted(writer, number2 + " ");// пишем последнее число з 2 файла
-                                    while (!isEmptyMarker1)// и до конца строки пишем числа из файла 1
+                                    WriteCounted(writer, number2 + " ");// пишемо останнє число з 2 файла
+                                    while (!isEmptyMarker1)// і до кінця рядка пишемо число з файлу 1
                                     {
                                         WriteCounted(writer, number1 + " ");
                                         has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                                     }
-                                    WriteCounted(writer, number1 + " ");// записываем последнее число з 1 файла которое цикл не покрывает
+                                    WriteCounted(writer, number1 + " ");// записуємо останнє число з 1 файла яке цикл не покриває
 
                                 }
                             }
-                            WriteLineCounted(writer);//переходим на новую строку
-                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                            WriteLineCounted(writer);//переходимо на новий рядок
+                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступні числа
                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                         }
-                        else//если числа не последние, просто записываем меньшее и запрашиваем новое
+                        else//якщо числа не останні, просто записуємо менше і запитуємо нове
                         {
                             WriteCounted(writer, number1 + " ");
                             has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
@@ -567,44 +567,44 @@ namespace Cursak
 
 
                     }
-                    else// если число з 2 файла меньше
+                    else// якщо число з 2 файла менше
                     {
 
-                        if (isEmptyMarker1 && isEmptyMarker2) //если два числа последние в строке
+                        if (isEmptyMarker1 && isEmptyMarker2) //якщо два числа останні в рядку
                         {
-                            WriteCounted(writer, number2 + " ");//вводим меньшее число
-                            WriteCounted(writer, number1 + " ");// вводим большее число
-                            WriteLineCounted(writer);//переходим на новую строку
-                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//ищем следующие числа
+                            WriteCounted(writer, number2 + " ");//вводимо менше число
+                            WriteCounted(writer, number1 + " ");// вводимо більше число
+                            WriteLineCounted(writer);//переходимо на новий рядок
+                            has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);//шукаємо наступне число
                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                         }
 
-                        else if (isEmptyMarker1)// если число из 1 файла последнее в строке
+                        else if (isEmptyMarker1)// якщо число з 1 файла останнє в рядку
                         {
                             //writer.Write(number2 + " ");
-                            while (!isEmptyMarker2)//пока не закончаться числа во 2 файле 
+                            while (!isEmptyMarker2)//поки не закінчаться числа в 2 файлі
                             {
-                                if (number1 > number2) // если  число из 2 файла меньше, выводим числа из 2 файла
+                                if (number1 > number2) // якщо число з 2 файлу менше, виводимо числа з 2 файлу
                                 {
                                     WriteCounted(writer, number2 + " ");
                                     has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
-                                    if (isEmptyMarker2 && number1 > number2)//на случай если последнее будет меньше
+                                    if (isEmptyMarker2 && number1 > number2)//на випадок якщо останнє буде менше
                                     {
                                         WriteCounted(writer, number2 + " ");
                                         WriteCounted(writer, number1 + " ");
                                         //writer.WriteLine();
                                     }
-                                    else if (isEmptyMarker2 && number1 <= number2)//если последнее будет больше
+                                    else if (isEmptyMarker2 && number1 <= number2)//якщо останнє буде більше
                                     {
                                         WriteCounted(writer, number1 + " ");
                                         WriteCounted(writer, number2 + " ");
                                         //writer.WriteLine();
                                     }
                                 }
-                                else //пока они не станут больше
+                                else //поки вони не стануть більше
                                 {
-                                    WriteCounted(writer, number1 + " ");// пишем последнее число з 1 файла
-                                    while (!isEmptyMarker2)// и до конца строки пишем числа из файла 2
+                                    WriteCounted(writer, number1 + " ");// пишемо остання число з 1 файла
+                                    while (!isEmptyMarker2)// і до кінця рядка пишемо числа з файлу 2
                                     {
                                         WriteCounted(writer, number2 + " ");
                                         has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
@@ -616,21 +616,21 @@ namespace Cursak
                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                             WriteLineCounted(writer);
                         }
-                        else if (isEmptyMarker2)//если число из 2 файла последнее в строке
+                        else if (isEmptyMarker2)//якщо число з 2 файла останнє в рядку
                         {
-                            WriteCounted(writer, number2 + " ");//пишем его так как оно меньше
-                            while (!isEmptyMarker1)//пишем до конца строки чисел из файла 1
+                            WriteCounted(writer, number2 + " ");//пишемо його так як воно менше
+                            while (!isEmptyMarker1)//пишемо до кінця радка числа з файлу 1
                             {
                                 WriteCounted(writer, number1 + " ");
                                 has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                             }
-                            WriteCounted(writer, number1 + " ");//записуем последнее число з 1 файла
+                            WriteCounted(writer, number1 + " ");//записуемо останнє число з 1 файла
                             WriteLineCounted(writer);
                             has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
                         }
 
-                        else//если числа не последние, просто записываем меньшее и запрашиваем новое
+                        else//якщо числа не останні, просто записуємо менше і запитуємо нове
                         {
                             WriteCounted(writer, number2 + " ");
                             has2 = TryReadNextNumber(reader2, out number2, out isEmptyMarker2);
@@ -644,25 +644,25 @@ namespace Cursak
 
 
             }
-            //если один из файлов закончился, то сливаем оставшиеся числа из другого файла
-            int count1 = CountLines(outputfile);//считаем количество строк в файле 3
-            RemoveFirstNLines(inputfile1, count1);//удаляем обьедененное колличество слов
+            //якщо один з файлів закінчився, то зливаємо залишкові числа з іншого файлу
+            int count1 = CountLines(outputfile);//рахуємо кількість рядків в файлі 3
+            RemoveFirstNLines(inputfile1, count1);//видаляємо об'єднану кількість рядків
             RemoveFirstNLines(inputfile2, count1);
             //Console.WriteLine(count1);
 
             //повторне розбиття за 2 файлами
 
-            if (!has1)// если первым закончился файл 1
+            if (!has1)// якщо першим закінчився файл 1
             {
                 using (StreamReader reader1 = new StreamReader(inputfile1))
                 using (StreamReader reader2 = new StreamReader(inputfile2))
                 using (StreamWriter writer = new StreamWriter(outputfile, append: true))
                 {
                     has2 = TryReadNextNumber(reader2, out int number2, out bool isEmptyMarker2);
-                    while (has2)//пока не закончаться числа во 2 файле 
+                    while (has2)//поки не закінчаться числа в 2 файлі
                     {
                         WriteCounted(writer, number2 + " ");
-                        if (isEmptyMarker2)//на случай если последнее будет меньше
+                        if (isEmptyMarker2)//на випад якщо останнє буде менше
                         {
 
                             writer.WriteLine();
@@ -675,17 +675,17 @@ namespace Cursak
                 System.IO.File.Create(inputfile2).Dispose();
                 //NaturallyMergeFiles(inputfile2, outputfile, inputfile1);
             }
-            else if (!has2)// если первым закончился файл 2
+            else if (!has2)// якщо першим закінчився файл 2
             {
                 using (StreamReader reader1 = new StreamReader(inputfile1))
                 using (StreamReader reader2 = new StreamReader(inputfile2))
                 using (StreamWriter writer = new StreamWriter(outputfile, append: true))
                 {
                     has1 = TryReadNextNumber(reader1, out int number1, out bool isEmptyMarker1);
-                    while (has1)//пока не закончаться числа во 2 файле 
+                    while (has1)//поки не закінчаться числа в 1 файлі
                     {
                         WriteCounted(writer, number1 + " ");
-                        if (isEmptyMarker1)//на случай если последнее будет меньше
+                        if (isEmptyMarker1)//на випадок якщо останнє буде менше
                         {
                             writer.WriteLine();
                         }
@@ -855,11 +855,11 @@ namespace Cursak
                         }
                     }
 
-                    // Пишем минимальное число
+                    // Пишемо найменше число в активний файл
                     WriteCounted(ActiveWriter, minValue + " ");
 
 
-                    // Обновляем число из того файла, откуда взяли
+                    // оновляємо число з того файлу, звідки ми взяли найменше
                     if (fromWhich == 1 && !line1finished)
                         has1 = TryReadNextNumber(reader1, out number1, out isEmptyMarker1);
                     else if (fromWhich == 2 && !line2finished)
@@ -876,11 +876,6 @@ namespace Cursak
                 has1 = TryReadNextNumber(writer1, out int number1, out bool isEmptyMarker1);
                 has2 = TryReadNextNumber(writer2, out int number2, out bool isEmptyMarker2);
                 has3 = TryReadNextNumber(writer3, out int number3, out bool isEmptyMarker3);
-                /*
-                Тобі не потрібно очищати решту двох файлів перед перевіркою
-                , бо ти і так пишеш тільки в один активний файл під час злиття,
-                а решта залишаються порожніми автоматично.
-                */
                 if ((has1 && !has2 && !has3))
                 {
                     return outputfile1;
@@ -952,14 +947,14 @@ namespace Cursak
                 {
                     result = int.MaxValue;
                     isEndOfLine = true;
-                    return true; // "E" обозначает пустой масив чтобы алгоритм сошелся
+                    return true; // "E" ознчає порожній масив, необхідний для сходження алгоритму
                 }
 
                 if (c == '\n')
                 {
 
 
-                    // Если число накопилось перед \n — сначала его вернём
+                    // Якщо накопичилось число перед \n — спочатку його повернемо
                     if (currentNumber.Length > 0)
                     {
                         if (int.TryParse(currentNumber, out result))
@@ -968,11 +963,11 @@ namespace Cursak
                         }
                         else
                         {
-                            return false; // ошибка парсинга числа
+                            return false; // помилка парсингу числа
                         }
                     }
 
-                    // Иначе просто переходим к следующему числу
+                    // іначе просто переходимо до наступного числа
                     continue;
                 }
 
@@ -991,10 +986,10 @@ namespace Cursak
                         }
                         else
                         {
-                            return false; // ошибка парсинга числа
+                            return false;  // помилка парсингу числа
                         }
                     }
-                    // пробелы до начала числа — игнорируем
+                    //ігноруємо пробіли до початку числа
                 }
                 else
                 {
@@ -1002,20 +997,20 @@ namespace Cursak
                 }
             }
 
-            // Дошли до конца файла — возможно, есть ещё одно число
+            //Дійшли до кінця строки - можливо, є ще одне число
             if (currentNumber.Length > 0)
             {
                 if (int.TryParse(currentNumber, out result))
                 {
-                    isEndOfLine = true; // условно считаем, что строка закончилась
+                    isEndOfLine = true; // умовно вважаємо, що це кінець рядка
                     return true;
                 }
             }
 
-            return false; // действительно конец файла
+            return false; // дійсно кінець файлу
         }
 
-        int CountLines(string filePath)//считаем количество строк в файле
+        int CountLines(string filePath)//рахуємо кількість рядків у файлі
         {
             int lineCount = 0;
             using (StreamReader reader = new StreamReader(filePath))
@@ -1060,7 +1055,7 @@ namespace Cursak
                 }
             }
 
-            // Заменяем оригинальный файл
+            // замінюємо оригінальний файл на тимчасовий
             System.IO.File.Delete(filePath);
             System.IO.File.Move(tempFilePath, filePath);
         }

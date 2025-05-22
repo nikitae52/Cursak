@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Cursak
 {
-    public partial class Form2 : Form
+    public partial class LoadingForm : Form
     {
-        public Form2()
+        public LoadingForm()
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;

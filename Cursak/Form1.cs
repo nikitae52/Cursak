@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace Cursak
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         //ініціалізація форми
         private Stopwatch stopwatch = new Stopwatch();
@@ -23,7 +23,7 @@ namespace Cursak
         private File Sortingfile;
         private File Genfile;
         //private File EnteredFile;
-        public Form1()
+        public MainForm()
         {
 
             InitializeComponent();
