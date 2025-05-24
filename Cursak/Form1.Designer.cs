@@ -204,6 +204,7 @@
             this.label7.Size = new System.Drawing.Size(396, 23);
             this.label7.TabIndex = 15;
             this.label7.Text = "Генератор файлів з випадковими числами";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // button3
             // 
@@ -380,7 +381,7 @@
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged_1);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -416,7 +417,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sorter";
             this.Load += new System.EventHandler(this.Form1_Load);

@@ -56,6 +56,12 @@ namespace Cursak
                 return;
             }
 
+            else if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                MessageBox.Show("Назва файлу містить недопустимі символи!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
 
             //введення кількості випадкових чисел у файлі
             string numOfRandElem = textBox2.Text.Trim();
@@ -117,6 +123,12 @@ namespace Cursak
 
             button1.Enabled = false;
             button2.Visible = false;
+            button4.Enabled = false;
+            checkBox4.Checked = false;
+            checkBox4.Enabled = false;
+            button3.Enabled = false;
+            button5.Visible = false;
+
             Genfile = File.GenerateFile(fileName, count, minR, maxR);
             button1.Enabled = true;
             Sortingfile =null;
@@ -127,7 +139,10 @@ namespace Cursak
             label12.Text = "";
             textBox5.Text = "";
             */
-
+            checkBox4.Enabled =true;
+            button2.Enabled = true;
+            button3.Enabled = true;
+            button4.Enabled = true;
             button2.Visible = true;
             button5.Visible = false;
             checkBox4.Checked = false;
@@ -239,6 +254,7 @@ namespace Cursak
                     textBox5.Visible = false;
                     button4.Visible = false;
                     Sortingfile = Genfile;
+                    button5.Visible = false;
 
 
                 }
@@ -249,6 +265,7 @@ namespace Cursak
                 label8.Visible = true;
                 textBox5.Visible = true;
                 button4.Visible = true;
+                button5.Visible = false;
 
             }
         }
@@ -280,6 +297,9 @@ namespace Cursak
                 timer1.Start();
                 button3.Enabled = false;
                 button5.Visible = false;
+                button1.Enabled = false;
+                checkBox4.Enabled = false;
+                button4.Enabled = false;
                 label13.Text = "";
                 await Task.Run(() =>
                 {
@@ -288,6 +308,9 @@ namespace Cursak
                     //(SortedFile3, ReadNumber, WriteNumber) = FileSorter.PolyPhaseSort(SortingfileName);
                 });
                 button3.Enabled = true;
+                button1.Enabled = true; 
+                checkBox4.Enabled = true;
+                button4.Enabled = true;
 
                 timer1.Stop();
                 stopwatch.Stop();
@@ -311,6 +334,9 @@ namespace Cursak
                 timer1.Start();
                 button3.Enabled = false;
                 button5.Visible = false;
+                button1.Enabled = false;
+                checkBox4.Enabled = false;
+                button4.Enabled = false;
                 label13.Text = "";
                 await Task.Run(() =>
                 {
@@ -320,6 +346,9 @@ namespace Cursak
                 });
 
                 button3.Enabled = true;
+                button1.Enabled = true;
+                checkBox4.Enabled = true;
+                button4.Enabled = true;
                 timer1.Stop();
                 stopwatch.Stop();
 
@@ -342,6 +371,9 @@ namespace Cursak
                 timer1.Start();
                 button3.Enabled = false;
                 button5.Visible = false;
+                button1.Enabled = false;
+                checkBox4.Enabled = false;
+                button4.Enabled = true;
                 label13.Text = "";
                 await Task.Run(() =>
                 {
@@ -350,6 +382,9 @@ namespace Cursak
                 });
 
                 button3.Enabled = true;
+                button1.Enabled = true;
+                checkBox4.Enabled = true;
+                button4.Enabled = true;
                 timer1.Stop();
                 stopwatch.Stop();
 
@@ -456,6 +491,11 @@ namespace Cursak
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
         {
 
         }

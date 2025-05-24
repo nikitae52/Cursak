@@ -679,7 +679,7 @@ namespace Cursak
             {
                 using (StreamReader reader1 = new StreamReader(inputfile1))
                 using (StreamReader reader2 = new StreamReader(inputfile2))
-                using (StreamWriter writer = new StreamWriter(outputfile, append: true))
+                using (StreamWriter writer = new StreamWriter(outputfile, append: true)) // записуємо в кінець файлу не переписуючи його
                 {
                     has1 = TryReadNextNumber(reader1, out int number1, out bool isEmptyMarker1);
                     while (has1)//поки не закінчаться числа в 1 файлі
@@ -1027,6 +1027,7 @@ namespace Cursak
 
         void RemoveFirstNLines(string filePath, int N)
         {
+            if (N <= 0) return;
             string tempFilePath = "TEMPFILE.txt";
             using (var input = System.IO.File.OpenRead(filePath))
             using (var output = System.IO.File.Create(tempFilePath))
