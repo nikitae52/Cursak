@@ -56,7 +56,7 @@ namespace Cursak
                 return;
             }
 
-            else if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            else if (fileName.IndexOfAny(Path.GetInvalidFileNameChars().Concat(new[] { ',','=' }).ToArray()) >= 0)
             {
                 MessageBox.Show("Назва файлу містить недопустимі символи!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -294,7 +294,7 @@ namespace Cursak
                 label12.Text = "00:00:00.010";
 
                 stopwatch.Restart();
-                timer1.Start();
+                timer1.Start();//оновлює інтерфейс кожні 100 мс, коли ввімкнений секундомір
                 button3.Enabled = false;
                 button5.Visible = false;
                 button1.Enabled = false;
@@ -331,7 +331,7 @@ namespace Cursak
                 label12.Text = "00:00:00.010";
 
                 stopwatch.Restart();
-                timer1.Start();
+                timer1.Start();//оновлює інтерфейс кожні 100 мс, коли ввімкнений секундомір
                 button3.Enabled = false;
                 button5.Visible = false;
                 button1.Enabled = false;
@@ -368,7 +368,7 @@ namespace Cursak
                 label12.Text = "00:00:00.010";
 
                 stopwatch.Restart();
-                timer1.Start();
+                timer1.Start();//оновлює інтерфейс кожні 100 мс, коли ввімкнений секундомір
                 button3.Enabled = false;
                 button5.Visible = false;
                 button1.Enabled = false;
@@ -455,7 +455,7 @@ namespace Cursak
 
         private void timer1_Tick_1(object sender, EventArgs e)
         {
-            label12.Text = stopwatch.Elapsed.ToString(@"hh\:mm\:ss\.fff");
+            label12.Text = stopwatch.Elapsed.ToString(@"hh\:mm\:ss\.fff");// кожні 100 мс переводить час у потрібний формат та змінює пройдений час 
         }
 
         private void button5_Click(object sender, EventArgs e)
